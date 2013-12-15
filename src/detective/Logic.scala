@@ -15,7 +15,7 @@ object Logic {
     val facts = for(requirement<-requirements)yield createFactOfPhrase(requirement) 
     straight(facts ::: Data.facts, Data.rules, "HIRE") match {
       case Some(fact) => s"You should hire ${fact.value}"
-      case None => "Add more details about detectivedfsdsdfsdf"
+      case None => "Add more details about detective"
     }
   }
 
