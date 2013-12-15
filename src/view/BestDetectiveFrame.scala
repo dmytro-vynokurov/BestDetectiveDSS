@@ -10,7 +10,11 @@ import scala.swing._
 import scala.swing.TabbedPane.Page
 import scala.swing.GridBagPanel.Fill
 import java.awt.Color
-import src.dss.{Fact, Rule}
+import dss.{Fact, Rule}
+import detective.Logic._
+import detective.Data
+import dss.LogicParseException
+import scala.swing.event.ListSelectionChanged
 
 
 object BestDetectiveFrame extends SimpleSwingApplication {
@@ -20,7 +24,7 @@ object BestDetectiveFrame extends SimpleSwingApplication {
 
     val requirementsTextArea = new TextArea(){
       border = Swing.LineBorder(Color.BLACK)
-      text = "Text area 1"
+      text = ""
     }
     c.fill = Fill.Both
     c.weightx = 10
@@ -30,7 +34,11 @@ object BestDetectiveFrame extends SimpleSwingApplication {
     c.gridheight = 2
     layout(requirementsTextArea) = c
 
-    val findDetectivesButton = new Button("Find detective"){}
+    val findDetectivesButton = new Button(){
+      action = new Action("Find detective"){
+        def apply():Unit = resultsTextArea.text = findDetective(requirementsTextArea.text).toString
+      }
+    }
     c.weightx = 1
     c.weighty = 0
     c.gridx = 1
@@ -40,7 +48,7 @@ object BestDetectiveFrame extends SimpleSwingApplication {
 
     val resultsTextArea = new TextArea(){
       border = Swing.LineBorder(Color.BLACK)
-      text = "TA 2"
+      text = ""
     }
     c.weightx = 1
     c.weighty = 1
@@ -52,7 +60,10 @@ object BestDetectiveFrame extends SimpleSwingApplication {
   lazy val ruleManagerPanel = new GridBagPanel(){
     val c = new Constraints
 
-    val rulesList = new ListView[Rule](){}
+    val rulesList = new ListView[Rule](){
+      selection.intervalMode = ListView.IntervalMode.Single
+      listData = Data.rules
+    }
     c.fill = Fill.Both
     c.weightx = 1
     c.weighty = 20
@@ -60,6 +71,13 @@ object BestDetectiveFrame extends SimpleSwingApplication {
     c.gridy = 0
     c.gridwidth = 2
     layout(rulesList) = c
+
+    def selectedRule = rulesList.listData(rulesList.selection.leadIndex)
+
+    listenTo(rulesList.selection)
+    reactions += {
+      case ListSelectionChanged(event) => removeRuleTextField.text = selectedRule.toString
+    }
 
     val addRuleTextField = new TextField(){}
     c.weightx = 9
@@ -69,7 +87,17 @@ object BestDetectiveFrame extends SimpleSwingApplication {
     c.gridwidth = 1
     layout(addRuleTextField) = c
 
-    val addRuleButton = new Button("Add rule"){}
+    val addRuleButton = new Button(){
+      action = new Action("Add rule") {
+        def apply(): Unit = try{
+          addRule(addRuleTextField.text)
+          rulesList.listData = Data.rules
+          addRuleTextField.text = ""
+        } catch {
+          case LogicParseException(exceptionMessage) => Dialog.showMessage(message=exceptionMessage,title = "Rule parsing failed")
+        }
+      }
+    }
     c.weightx = 1
     c.weighty = 1
     c.gridx = 1
@@ -83,7 +111,18 @@ object BestDetectiveFrame extends SimpleSwingApplication {
     c.gridy = 2
     layout(removeRuleTextField) = c
 
-    val removeRuleButton = new Button("Remove rule"){}
+    val removeRuleButton = new Button(){
+      action = new Action("Remove rule"){
+        def apply():Unit = {
+          if(removeRuleTextField.text.isEmpty) Dialog.showMessage(message = "No rule selected",title = "Error")
+          else {
+            removeRule(selectedRule)
+            rulesList.listData = Data.rules
+            removeRuleTextField.text = ""
+          }
+        }
+      }
+    }
     c.weightx = 1
     c.weighty = 1
     c.gridx = 1
@@ -94,7 +133,10 @@ object BestDetectiveFrame extends SimpleSwingApplication {
   lazy val factManagerPanel = new GridBagPanel(){
     val c = new Constraints
 
-    val factsList = new ListView[Fact](){}
+    val factsList = new ListView[Fact](){
+      selection.intervalMode = ListView.IntervalMode.Single
+      listData = Data.facts
+    }
     c.fill = Fill.Both
     c.weightx = 1
     c.weighty = 20
@@ -102,6 +144,13 @@ object BestDetectiveFrame extends SimpleSwingApplication {
     c.gridy = 0
     c.gridwidth = 2
     layout(factsList) = c
+
+    def selectedFact = factsList.listData(factsList.selection.leadIndex)
+
+    listenTo(factsList.selection)
+    reactions += {
+      case ListSelectionChanged(event) => removeFactTextField.text = selectedFact.toString
+    }
 
     val addFactTextField = new TextField(){}
     c.weightx = 9
@@ -111,7 +160,17 @@ object BestDetectiveFrame extends SimpleSwingApplication {
     c.gridwidth = 1
     layout(addFactTextField) = c
 
-    val addFactButton = new Button("Add fact"){}
+    val addFactButton = new Button(){
+      action = new Action("Add fact") {
+        def apply(): Unit = try{
+          addFact(addFactTextField.text)
+          factsList.listData = Data.facts
+          addFactTextField.text = ""
+        } catch {
+          case LogicParseException(exceptionMessage) => Dialog.showMessage(message=exceptionMessage,title = "Fact parsing failed")
+        }
+      }
+    }
     c.weightx = 1
     c.weighty = 1
     c.gridx = 1
@@ -125,7 +184,18 @@ object BestDetectiveFrame extends SimpleSwingApplication {
     c.gridy = 2
     layout(removeFactTextField) = c
 
-    val removeFactButton = new Button("Remove fact"){}
+    val removeFactButton = new Button(){
+      action = new Action("Remove fact"){
+        def apply():Unit = {
+          if(removeFactTextField.text.isEmpty) Dialog.showMessage(message = "No fact selected",title = "Error")
+          else {
+            removeFact(selectedFact)
+            factsList.listData = Data.facts
+            removeFactTextField.text = ""
+          }
+        }
+      }
+    }
     c.weightx = 1
     c.weighty = 1
     c.gridx = 1

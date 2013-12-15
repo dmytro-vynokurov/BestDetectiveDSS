@@ -1,7 +1,5 @@
-package src.dss
+package dss
 
-import dss.Util
-import Util._
 /**
  * User: Dmytro Vynokurov
  * Date: 10/22/13

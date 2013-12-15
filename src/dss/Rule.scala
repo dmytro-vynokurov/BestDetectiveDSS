@@ -1,4 +1,4 @@
-package src.dss
+package dss
 
 /**
  * User: Dmytro Vynokurov
@@ -19,16 +19,4 @@ class FactAsList(val first:Fact){
 
 class FactList(val left:List[Fact]){
   def |=(right:Fact):Rule = new Rule(left,right)
-}
-
-
-object f{
-  def main(args: Array[String]) {
-    import Fact._
-    import Rule._
-    println("age" o "5")
-    println(("a" o "1") :: ("b" o "2") :: ("c" o "3"))
-    println(("a" o "1") :: ("b" o "2") :: ("c" o "3") |= ("d" o "5"))
-
-  }
 }

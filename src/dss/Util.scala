@@ -1,16 +1,13 @@
 package dss
 
-import src.dss.{Rule, Fact}
-
 /**
  * User: Dmytro Vynokurov
  * Date: 12/14/13
  * Time: 9:23 PM
  */
 object Util {
-  class LogicParseException(exception:String) extends RuntimeException(exception)
   def removeSmallLetters(phrase:String):String = for{symbol<-phrase;if !(symbol.toInt >= 97 && symbol.toInt <= 122)}yield symbol
-  def getCapitalCaseWords(phrase:String):List[String] = phrase.split("\\W").toList
+  def getCapitalCaseWords(phrase:String):List[String] = removeSmallLetters(phrase).split("\\W").toList.filter(!_.isEmpty)
   def createFactOfPhrase(phrase:String):Fact = {
     val words = getCapitalCaseWords(phrase)
     if(words.length!=2) throw new LogicParseException("""Cannot parse phrase """" + phrase + """" into fact""")
@@ -28,3 +25,4 @@ object Util {
     Rule(leftSide,rightSide)
   }
 }
+case class LogicParseException(exception:String) extends RuntimeException(exception)

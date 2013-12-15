@@ -1,20 +1,23 @@
 package detective
 
-import src.dss.Fact._
+import dss.Fact._
+import dss.Rule._
+import dss.Rule
 /**
  * User: Dmytro Vynokurov
  * Date: 12/15/13
  * Time: 10:41 AM
  */
 object Data {
-  val facts =
+  var facts =
     ("HOLMES" o "SMART") ::
     ("HOLMES" o "OLD") ::
     ("HOLMES" o "HASASSISTANT") ::
     ("POIROT" o "SMART") ::
     Nil
 
-  val rules =
-    ("")
+  var rules:List[Rule] =
+    (("HOLMES" o "SMART")::("HOLMES" o "BRITAIN") |= ("HIRE" o "HOLMES")) ::
+    Nil
 
 }
