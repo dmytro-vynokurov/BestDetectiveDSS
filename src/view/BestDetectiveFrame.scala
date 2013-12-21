@@ -36,7 +36,7 @@ object BestDetectiveFrame extends SimpleSwingApplication {
 
     val findDetectivesButton = new Button(){
       action = new Action("Find detective"){
-        def apply():Unit = resultsTextArea.text = findDetective(requirementsTextArea.text).toString
+        def apply():Unit = tryParse{resultsTextArea.text = findDetective(requirementsTextArea.text)}
       }
     }
     c.weightx = 1
@@ -89,12 +89,10 @@ object BestDetectiveFrame extends SimpleSwingApplication {
 
     val addRuleButton = new Button(){
       action = new Action("Add rule") {
-        def apply(): Unit = try{
+        def apply(): Unit = tryParse{
           addRule(addRuleTextField.text)
           rulesList.listData = Data.rules
           addRuleTextField.text = ""
-        } catch {
-          case LogicParseException(exceptionMessage) => Dialog.showMessage(message=exceptionMessage,title = "Rule parsing failed")
         }
       }
     }
@@ -138,6 +136,12 @@ object BestDetectiveFrame extends SimpleSwingApplication {
       pages += new Page("Detective picker",detectivePickerPanel)
       pages += new Page("Rule manager",ruleManagerPanel)
     }
+  }
+
+  def tryParse(func: =>Unit) = try{
+    func
+  } catch {
+    case LogicParseException(exceptionMessage) => Dialog.showMessage(message=exceptionMessage,title = "Parsing failed")
   }
 
 }
