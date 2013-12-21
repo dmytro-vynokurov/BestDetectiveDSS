@@ -1,8 +1,6 @@
 package detective
 
-import dss.Fact._
-import dss.Rule._
-import dss.Rule
+import dss.Util._
 
 /**
  * User: Dmytro Vynokurov
@@ -10,7 +8,10 @@ import dss.Rule
  * Time: 10:41 AM
  */
 object Data {
-  var rules: List[Rule] =
-    (("DETECTIVE" ==> "SMART") :: ("DETECTIVE" ==> "BRITAIN") |= ("HIRE" ==> "HOLMES")) ::
-      Nil
+  var rules =
+    for{line<-
+     """if DETECTIVE is SMART and DETECTIVE is from BRITAIN then you should HIRE HOLMES
+        if DETECTIVE is MAN and DETECTIVE is from BELGIUM then you should HIRE POIROT"""
+       .split('\n').toList
+    }yield createRuleOfPhrase(line)
 }

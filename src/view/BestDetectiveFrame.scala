@@ -10,7 +10,7 @@ import scala.swing._
 import scala.swing.TabbedPane.Page
 import scala.swing.GridBagPanel.Fill
 import java.awt.Color
-import dss.{Fact, Rule}
+import dss.Rule
 import detective.Logic._
 import detective.Data
 import dss.LogicParseException
