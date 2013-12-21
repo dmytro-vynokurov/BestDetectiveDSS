@@ -1,6 +1,5 @@
 package detective
 
-import dss.Fact
 import dss.Rule
 import dss.StraightFinder._
 import dss.Util._
@@ -13,17 +12,13 @@ object Logic {
   def findDetective(requirementsText:String) = {
     val requirements:List[String] = requirementsText.split('\n').toList
     val facts = for(requirement<-requirements)yield createFactOfPhrase(requirement) 
-    straight(facts ::: Data.facts, Data.rules, "HIRE") match {
+    straight(facts, Data.rules, "HIRE") match {
       case Some(fact) => s"You should hire ${fact.value}"
       case None => "Add more details about detective"
     }
   }
 
-  def addFact(text:String):Unit = Data.facts = createFactOfPhrase(text) :: Data.facts
-  
-  def removeFact(fact: Fact):Unit = Data.facts = Data.facts.filter(_!=fact)
-
-  def addRule(text:String):Unit = Data.facts = createFactOfPhrase(text) :: Data.facts
+  def addRule(text:String):Unit = Data.rules = createRuleOfPhrase(text) :: Data.rules
 
   def removeRule(rule: Rule):Unit = Data.rules = Data.rules.filter(_!=rule)
   

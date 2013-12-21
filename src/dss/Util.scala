@@ -16,7 +16,7 @@ object Util {
   def createRuleOfPhrase(phrase:String):Rule = {
     var words = getCapitalCaseWords(phrase)
     var leftSide:List[Fact] = Nil
-    if(words.length%2!=0 || words.length<=4)throw new LogicParseException( """Cannot parse phrase """" + phrase + """" into rule""")
+    if(words.length%2!=0 || words.length<4)throw new LogicParseException( """Cannot parse phrase """" + phrase + """" into rule""")
     while(words.length>=4){
       leftSide = Fact(words.head,words.tail.head) :: leftSide
       words = words.tail.tail

@@ -13,7 +13,7 @@ object Fact{
 }
 
 class FactName(val name:String){
-  def o(value:String):Fact = Fact(name,value)
+  def ==>(value:String):Fact = Fact(name,value)
 }
 
 object Runner{
@@ -23,9 +23,9 @@ object Runner{
     import StraightFinder._
     import ReverseFinder._
 
-    val f1 = "Marina" o "girl"
-    val f2 = "Marina" o "nice"
-    val f3 = "I like" o "Marina"
+    val f1 = String2FactName("Marina").==>("girl")
+    val f2 = "Marina" ==> "nice"
+    val f3 = "I like" ==> "Marina"
     val r1 = f1 :: f2 |= f3
     val f4 = Fact("Marina","girl")
 

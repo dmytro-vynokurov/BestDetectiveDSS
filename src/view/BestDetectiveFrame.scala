@@ -130,87 +130,13 @@ object BestDetectiveFrame extends SimpleSwingApplication {
     layout(removeRuleButton) = c
 
   }
-  lazy val factManagerPanel = new GridBagPanel(){
-    val c = new Constraints
-
-    val factsList = new ListView[Fact](){
-      selection.intervalMode = ListView.IntervalMode.Single
-      listData = Data.facts
-    }
-    c.fill = Fill.Both
-    c.weightx = 1
-    c.weighty = 20
-    c.gridx = 0
-    c.gridy = 0
-    c.gridwidth = 2
-    layout(factsList) = c
-
-    def selectedFact = factsList.listData(factsList.selection.leadIndex)
-
-    listenTo(factsList.selection)
-    reactions += {
-      case ListSelectionChanged(event) => removeFactTextField.text = selectedFact.toString
-    }
-
-    val addFactTextField = new TextField(){}
-    c.weightx = 9
-    c.weighty = 1
-    c.gridx = 0
-    c.gridy = 1
-    c.gridwidth = 1
-    layout(addFactTextField) = c
-
-    val addFactButton = new Button(){
-      action = new Action("Add fact") {
-        def apply(): Unit = try{
-          addFact(addFactTextField.text)
-          factsList.listData = Data.facts
-          addFactTextField.text = ""
-        } catch {
-          case LogicParseException(exceptionMessage) => Dialog.showMessage(message=exceptionMessage,title = "Fact parsing failed")
-        }
-      }
-    }
-    c.weightx = 1
-    c.weighty = 1
-    c.gridx = 1
-    c.gridy = 1
-    layout(addFactButton) = c
-
-    val removeFactTextField = new TextField(){}
-    c.weightx = 9
-    c.weighty = 1
-    c.gridx = 0
-    c.gridy = 2
-    layout(removeFactTextField) = c
-
-    val removeFactButton = new Button(){
-      action = new Action("Remove fact"){
-        def apply():Unit = {
-          if(removeFactTextField.text.isEmpty) Dialog.showMessage(message = "No fact selected",title = "Error")
-          else {
-            removeFact(selectedFact)
-            factsList.listData = Data.facts
-            removeFactTextField.text = ""
-          }
-        }
-      }
-    }
-    c.weightx = 1
-    c.weighty = 1
-    c.gridx = 1
-    c.gridy = 2
-    layout(removeFactButton) = c
-
-  }
 
   def top = new MainFrame {
-    title = "ScalaSwingExample"
+    title = "Best detective"
     preferredSize = new Dimension(700,400)
     contents = new TabbedPane(){
       pages += new Page("Detective picker",detectivePickerPanel)
       pages += new Page("Rule manager",ruleManagerPanel)
-      pages += new Page("Fact manager",factManagerPanel)
     }
   }
 
