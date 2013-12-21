@@ -10,8 +10,8 @@ import dss.Util._
 object Data {
   var rules =
     for{line<-
-     """if DETECTIVE is SMART and DETECTIVE is from BRITAIN then you should HIRE HOLMES
-        if DETECTIVE is MAN and DETECTIVE is from BELGIUM then you should HIRE POIROT"""
-       .split('\n').toList
+        "if DETECTIVE is SMART and DETECTIVE is from BRITAIN then you should HIRE HOLMES"::
+          "if DETECTIVE is MAN and DETECTIVE is from BELGIUM then you should HIRE POIROT"::
+          Nil
     }yield createRuleOfPhrase(line)
 }
