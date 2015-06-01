@@ -10,13 +10,13 @@ object Util {
   def getCapitalCaseWords(phrase:String):List[String] = removeSmallLetters(phrase).split("\\W").toList.filter(!_.isEmpty)
   def createFactOfPhrase(phrase:String):Fact = {
     val words = getCapitalCaseWords(phrase)
-    if(words.length!=2) throw new LogicParseException("""Cannot parse phrase """" + phrase + """" into fact""")
+    if(words.length!=2) throw new LogicParseException(s"""Cannot parse phrase "$phrase" into fact""")
     Fact(words.head,words.tail.head)
   }
   def createRuleOfPhrase(phrase:String):Rule = {
     var words = getCapitalCaseWords(phrase)
     var leftSide:List[Fact] = Nil
-    if(words.length%2!=0 || words.length<4)throw new LogicParseException( """Cannot parse phrase """" + phrase + """" into rule""")
+    if(words.length%2!=0 || words.length<4)throw new LogicParseException( s"""Cannot parse phrase "$phrase" into rule""")
     while(words.length>=4){
       leftSide = Fact(words.head,words.tail.head) :: leftSide
       words = words.tail.tail
